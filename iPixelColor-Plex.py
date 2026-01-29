@@ -19,7 +19,7 @@ def ensure_module(name):
         print(f'\n⚠️ Missing module "{name}". Installing...\n')
         from subprocess import check_call
         try:
-            check_call([sys.executable, "-m", "pip", "install", name])
+            check_call([sys.executable, "-m", "pip", "install", "--user", name])
             print(f'\n✅ Module "{name}" installed. Restarting...\n')
             sys.exit(1)
         except Exception as e:
@@ -286,3 +286,4 @@ while True:
 
 
     time.sleep(config["poll_interval"])
+

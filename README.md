@@ -37,8 +37,8 @@ The script installs missing modules automatically.
 Clone the repository:
 
 ```
-git clone https://github.com/yourusername/ipixel-plex-display
-cd ipixel-plex-display
+git clone https://github.com/pir8radio/Plex-iPixelColor-Now-Playing
+cd Plex-iPixelColor-Now-Playing
 ```
 
 Run the script:

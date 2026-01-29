@@ -5,6 +5,10 @@ A Python script that connects your **Plex Media Server** to an **iPixel Color LE
 
 This project is designed for reliability and hands‑off operation. Once configured, it runs continuously and automatically reconnects to your LED sign if the bluetooth connection drops.
 
+![ezgif-681aa14bd58a9571](https://github.com/user-attachments/assets/32897c94-65ae-43bb-a333-215d14cc2b11)
+<img src="https://github.com/user-attachments/assets/14703d87-58ce-42f8-8c07-02783ef1a506" width="600px">
+
+
 ---
 
 ## ✨ Features

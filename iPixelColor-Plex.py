@@ -82,7 +82,6 @@ def load_config():
         save_config(DEFAULT_CONFIG)
         return DEFAULT_CONFIG
 
-    # Ensure all keys exist
     updated = False
     for k, v in DEFAULT_CONFIG.items():
         if k not in data:
@@ -284,5 +283,6 @@ while True:
 
     except Exception as e:
         print(f"❌ Error: {e}")
+
 
     time.sleep(config["poll_interval"])

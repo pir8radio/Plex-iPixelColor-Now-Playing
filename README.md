@@ -7,10 +7,12 @@ This project is designed for reliability and hands‑off operation. Once configu
 
 ![ezgif-681aa14bd58a9571](https://github.com/user-attachments/assets/32897c94-65ae-43bb-a333-215d14cc2b11)
 * actually much smoother than this, but made this gif and its a little jumpy.
-  
-<img src="https://github.com/user-attachments/assets/14703d87-58ce-42f8-8c07-02783ef1a506" width="600px">
-* idle screen when nothing is playing can be the built in clock, blank, or some text you want like theater or DJ name. 
 
+
+  
+<img src="https://github.com/user-attachments/assets/14703d87-58ce-42f8-8c07-02783ef1a506" width="600px"></img>
+* idle screen when nothing is playing can be the built in clock, blank, or some text you want like theater or DJ name.
+  
 
 ---
 

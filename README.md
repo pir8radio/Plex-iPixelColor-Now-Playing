@@ -1,3 +1,4 @@
+** Yea, AI wrote this readme..  Don't judge, I get lazy when it comes to the readme files. :-)
 # 📺 iPixelColor Plex Now‑Playing Display
 
 A Python script that connects your **Plex Media Server** to an **iPixel Color LED sign** over BLE, displaying real‑time “Now Playing” information — or a customizable idle mode with optional built‑in clock display.

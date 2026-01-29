@@ -16,8 +16,11 @@ This project is designed for reliability and hands‑off operation. Once configu
 - 🧠 First‑run interactive setup (Plex IP, port, token)  
 - 🔍 BLE device scanner for iPixel Color LED signs  
 - 📝 Auto‑generated and auto‑updated config file  
-- ⚙️ Custom idle text or blank screen when nothing is playing  
+- ⚙️ Custom idle text or blank screen when nothing is playing
 
+<img width="760" height="409" alt="image" src="https://github.com/user-attachments/assets/45c74a30-9b32-47b1-b276-864345f59e4b" />
+
+  
 ---
 
 ## 📦 Requirements

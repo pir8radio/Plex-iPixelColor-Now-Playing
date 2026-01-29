@@ -44,7 +44,7 @@ cd Plex-iPixelColor-Now-Playing
 Run the script:
 
 ```
-python ipixel_plex.py
+python iPixelColor-Plex.py
 ```
 
 On first launch, you will be prompted for:

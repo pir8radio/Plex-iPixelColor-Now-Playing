@@ -220,7 +220,7 @@ def get_now_playing_for_device(target):
             player.platform
         }
 
-        identifiers = {str(x).strip().lower() for x in identifiers if x}
+        identifiers = {str(x).strip() for x in identifiers if x}
 
         if target in identifiers:
 

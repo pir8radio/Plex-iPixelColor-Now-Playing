@@ -111,9 +111,9 @@ Example:
 | `animation_type` | Text animation style |
 | `animation_speed` | Scroll speed |
 
----
 
-| Animation ID | Effect Name | What It Does |
+
+| Animation Type | Effect Name | What It Does |
 |--------------|-------------|--------------|
 | 0 | Static | Text appears instantly with no movement. |
 | 1 | Scroll Left | Standard marquee: text scrolls from right → left. |
@@ -125,6 +125,8 @@ Example:
 | 7 | Bounce | Text scrolls left, hits edge, reverses direction. |
 | 8 | Slide In | Text slides in from off‑screen and stops. |
 | 9 | Slide Out | Text slides out and disappears. |
+
+---
 
 # 🔑 How to Get Your Plex Token
 

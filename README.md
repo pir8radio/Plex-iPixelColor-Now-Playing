@@ -103,7 +103,7 @@ Example:
 |--------|-------------|
 | `plex_url` | Your Plex server URL |
 | `plex_token` | Plex authentication token |
-| `print_playing` | 'true' Helps find correct plex player |
+| `print_playing` | 'true' Helps find correct plex player, will list all devices currently playing something.|
 | `target_device` | Which Plex player to monitor |
 | `use_clock` | `true` = built‑in LED clock when idle |
 | `idle_text` | Text to show when nothing is playing |

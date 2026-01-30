@@ -108,7 +108,7 @@ Example:
 | `use_clock` | `true` = built‑in LED clock when idle |
 | `idle_text` | Text to show when nothing is playing |
 | `brightness` | LED brightness (0–100) |
-| `animation_type` | Text animation style |
+| `animation_type` | Text animation style. See below table. |
 | `animation_speed` | Scroll speed |
 
 

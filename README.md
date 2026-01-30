@@ -113,6 +113,19 @@ Example:
 
 ---
 
+| Animation ID | Effect Name | What It Does |
+|--------------|-------------|--------------|
+| 0 | Static | Text appears instantly with no movement. |
+| 1 | Scroll Left | Standard marquee: text scrolls from right → left. |
+| 2 | Scroll Right | Text scrolls from left → right. |
+| 3 | Scroll Up | Text moves bottom → top. |
+| 4 | Scroll Down | Text moves top → bottom. |
+| 5 | Typewriter | Characters appear one at a time. |
+| 6 | Blink | Text flashes on/off. |
+| 7 | Bounce | Text scrolls left, hits edge, reverses direction. |
+| 8 | Slide In | Text slides in from off‑screen and stops. |
+| 9 | Slide Out | Text slides out and disappears. |
+
 # 🔑 How to Get Your Plex Token
 
 Your Plex token is required for the script to authenticate with your Plex Media Server.  

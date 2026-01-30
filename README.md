@@ -37,10 +37,11 @@ This project is designed for reliability and hands‑off operation. Once configu
 - Python 3.10+  
 - `plexapi` (auto‑installed if missing)  
 - `pypixelcolor` (auto‑installed if missing)  
-- A bluetooth‑capable system  
+- A BLE‑capable (Bluetooth Low Energy) system  
 - An iPixel Color LED sign  
 
 The script installs missing modules automatically.
+Works on a Raspberry pi 5B.
 
 ---
 

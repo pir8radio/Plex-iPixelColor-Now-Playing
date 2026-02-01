@@ -238,7 +238,6 @@ Commercial use of any kind is strictly prohibited without written permission.
 ## ❤️ Credits
 
 Built by Pir8Radio
-Powered by PlexAPI + PyPixelColor
-
+Powered by PlexAPI + [PyPixelColor](https://github.com/lucagoc/pypixelcolor)
 ---
 

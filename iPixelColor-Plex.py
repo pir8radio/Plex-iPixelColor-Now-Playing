@@ -32,7 +32,6 @@ pypixelcolor = ensure_module("pypixelcolor")
 from plexapi.server import PlexServer
 from pypixelcolor.client import Client
 
-
 # ---------------------------------------------------------
 # CONFIGURATION FILE
 # ---------------------------------------------------------
@@ -50,7 +49,8 @@ DEFAULT_CONFIG = {
     "brightness": 80,
     "animation_type": 1,
     "animation_speed": 80,
-    "ble_address": None
+    "ble_address": None,
+    "led_sign_password": ""
 }
 
 def load_config():
@@ -60,6 +60,7 @@ def load_config():
         plex_ip = input("🌐 Enter your Plex server IP (default 127.0.0.1): ").strip()
         plex_port = input("🔌 Enter your Plex server port (default 32400): ").strip()
         plex_token = input("🔑 Enter your Plex token: ").strip()
+        led_sign_password = input("🔒 (optional) Enter LED sign password (leave blank if none): ").strip()
 
         if plex_port == "":
             plex_port = "32400"
@@ -69,6 +70,7 @@ def load_config():
         new_cfg = DEFAULT_CONFIG.copy()
         new_cfg["plex_url"] = f"http://{plex_ip}:{plex_port}"
         new_cfg["plex_token"] = plex_token
+        new_cfg["led_sign_password"] = led_sign_password
 
         save_config(new_cfg)
 
@@ -93,14 +95,11 @@ def load_config():
 
     return data
 
-
 def save_config(cfg):
     with open(CONFIG_FILE, "w") as f:
         json.dump(cfg, f, indent=4)
 
-
 config = load_config()
-
 
 # ---------------------------------------------------------
 # BLE SCANNING
@@ -144,16 +143,26 @@ def run_cli_scan():
 
         print("❌ Invalid choice. Try again.")
 
-
 # ---------------------------------------------------------
 # BLE CONNECT + AUTO-RECONNECT
 # ---------------------------------------------------------
-def connect_ble(address):
+def connect_ble(address, password=None):
     backoff = 1
     while True:
         try:
-            client = Client(address=address)
-            client.connect()
+            if password:
+                # Prefer passing password in constructor to avoid an unauthenticated attempt.
+                # If constructor doesn't accept password, fall back to connect(password=...).
+                try:
+                    client = Client(address=address, password=password)
+                    client.connect()
+                except TypeError:
+                    client = Client(address=address)
+                    client.connect(password=password)
+            else:
+                client = Client(address=address)
+                client.connect()
+
             print("🔗 BLE connected")
             return client
         except Exception as e:
@@ -162,16 +171,14 @@ def connect_ble(address):
             time.sleep(backoff)
             backoff = min(backoff * 2, 60)
 
-
 def ensure_ble_connected(client, address):
     try:
         client.get_device_info()
         return client, False
     except Exception:
         print("🔄 BLE connection lost — reconnecting...")
-        new_client = connect_ble(address)
+        new_client = connect_ble(address, config.get("led_sign_password"))
         return new_client, True
-
 
 # ---------------------------------------------------------
 # GET BLE ADDRESS (SCAN IF FIRST RUN)
@@ -183,17 +190,15 @@ if not BLE_ADDRESS:
 
 print(f"🛜 Using bluetooth device: {BLE_ADDRESS}")
 
-
 # ---------------------------------------------------------
 # INITIALIZE CLIENT + PLEX
 # ---------------------------------------------------------
-client = connect_ble(BLE_ADDRESS)
+client = connect_ble(BLE_ADDRESS, config.get("led_sign_password"))
 
 client.set_brightness(config["brightness"])
 print(f"💡 Brightness set to {config['brightness']}")
 
 plex = PlexServer(config["plex_url"], config["plex_token"])
-
 
 # ---------------------------------------------------------
 # PLEX DEVICE DETECTION
@@ -234,7 +239,6 @@ def get_now_playing_for_device(target):
                 return f"{session.title} ({session.year})"
 
     return None
-
 
 # ---------------------------------------------------------
 # MAIN LOOP
@@ -284,6 +288,4 @@ while True:
     except Exception as e:
         print(f"❌ Error: {e}")
 
-
     time.sleep(config["poll_interval"])
-

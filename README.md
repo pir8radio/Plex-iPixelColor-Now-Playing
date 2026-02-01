@@ -239,5 +239,6 @@ Commercial use of any kind is strictly prohibited without written permission.
 
 Built by Pir8Radio
 Powered by PlexAPI + [PyPixelColor](https://github.com/lucagoc/pypixelcolor)
+
 ---
 

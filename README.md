@@ -114,7 +114,7 @@ Example:
 | `brightness` | LED brightness (0–100) |
 | `animation_type` | Text animation style. See below table. |
 | `animation_speed` | Scroll speed |
-| 'led_sign_password' | Password of sign if set via their app |
+| 'led_sign_password' | Password of sign if set via their app *Not yet supported |
 
 
 

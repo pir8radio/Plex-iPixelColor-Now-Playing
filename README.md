@@ -131,6 +131,7 @@ Example:
 | `8` | Slide In | Text slides in from off‑screen and stops. |
 | `9` | Slide Out | Text slides out and disappears. |
 
+
 ---
 
 # 🔑 How to Get Your Plex Token
@@ -138,72 +139,51 @@ Example:
 Your Plex token is required for the script to authenticate with your Plex Media Server.  
 Here are the easiest ways to retrieve it.
 
----
-
 ## Method 1 — Quick URL Trick (Fastest)
 
-1. Open this URL in your browser, replacing `YOUR_PLEX_IP` and `PORT`:
+### 1. Open Plex in Your Browser
+
+Go to:
+
+- https://app.plex.tv  
+- **OR** locally: http://127.0.0.1:32400/web/
+  
+
+### 2. Find the Token
+
+1. Click the `...` menu on any movie or show.  
+2. Select **Get Info**  
+3. Scroll down and click **View XML**
+
+<img width="754" height="541" alt="image" src="https://github.com/user-attachments/assets/b3fadcb4-df8f-414e-ad56-5ea603e6fa2c" />
+
+
+### 3. Copy the Token
+
+The XML opens in a new tab.
+
+Look at the **URL in your browser’s address bar**.
+
+At the very end you’ll see:
 
 ```
-http://YOUR_PLEX_IP:PORT/?X-Plex-Token=1
+X-Plex-Token=YOURTOKENHERE
 ```
 
 Example:
 
 ```
-http://10.0.1.18:32400/?X-Plex-Token=1
+https://<server>:32400/library/metadata/123456?<lots-of-text....>&X-Plex-Token=abcd1234efgh5678
 ```
 
-2. Your browser will show an XML page.  
-3. Look for:
+The part **after** `X-Plex-Token=` is your Plex token.
 
-```
-X-Plex-Token="YOURTOKENHERE"
-```
-
----
-
-## Method 2 — Plex Web Inspector (Most Reliable)
-
-1. Open Plex Web:
-
-```
-http://YOUR_PLEX_IP:32400/web
-```
-
-2. Sign in.  
-3. Press **F12** to open Developer Tools.  
-4. Go to the **Network** tab.  
-5. Click around inside Plex.  
-6. Look for any request containing:
-
-```
-X-Plex-Token=
-```
-
-The long string after that is your token.
-
----
-
-## Method 3 — Plex Settings (Sometimes Hidden)
-
-1. Open Plex Web.  
-2. Go to **Settings → Network**.  
-3. Scroll to the bottom.  
-4. Look for:
-
-```
-Plex Token
-```
-
-Click **Show** to reveal it.
-
----
 
 ## ⚠️ Keep Your Token Private
 
 Your Plex token grants full access to your server.  
 Do **not** share it publicly or commit it to GitHub.
+
 
 ---
 

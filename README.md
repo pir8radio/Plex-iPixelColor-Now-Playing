@@ -64,7 +64,8 @@ On first launch, you will be prompted for:
 
 - Plex server IP  
 - Plex server port  
-- Plex token  
+- Plex token
+- LED Sign Password (if already set on the sign)
 
 Then the script will scan for BLE LED signs and let you select one.
 
@@ -72,6 +73,8 @@ Then the script will scan for BLE LED signs and let you select one.
 
 ## ⚙️ Configuration
 
+You will need to open the config file to enter your particular Plex device, by default it will just monitor any chrome browser playing media. 
+You can enable 'print_playing' by setting it to true.  then play some media on your plex device you want to montor, it should then show up in the terminal window.  Enter this title (case sensitive) in the 'target_device' config setting.
 All settings are stored in:
 
 ```
@@ -93,7 +96,8 @@ Example:
     "animation_type": 1,
     "animation_speed": 80,
     "ble_address": "AA:BB:CC:DD:EE:FF",
-    "brightness": 80
+    "brightness": 80,
+    "led_sign_password": ""
 }
 ```
 
@@ -110,21 +114,22 @@ Example:
 | `brightness` | LED brightness (0–100) |
 | `animation_type` | Text animation style. See below table. |
 | `animation_speed` | Scroll speed |
+| 'led_sign_password' | Password of sign if set via their app |
 
 
 
 | Animation Type | Effect Name | What It Does |
 |--------------|-------------|--------------|
-| 0 | Static | Text appears instantly with no movement. |
-| 1 | Scroll Left | Standard marquee: text scrolls from right → left. |
-| 2 | Scroll Right | Text scrolls from left → right. |
-| 3 | Scroll Up | Text moves bottom → top. |
-| 4 | Scroll Down | Text moves top → bottom. |
-| 5 | Typewriter | Characters appear one at a time. |
-| 6 | Blink | Text flashes on/off. |
-| 7 | Bounce | Text scrolls left, hits edge, reverses direction. |
-| 8 | Slide In | Text slides in from off‑screen and stops. |
-| 9 | Slide Out | Text slides out and disappears. |
+| '0' | Static | Text appears instantly with no movement. |
+| '1' | Scroll Left | Standard marquee: text scrolls from right → left. |
+| '2' | Scroll Right | Text scrolls from left → right. |
+| '3' | Scroll Up | Text moves bottom → top. |
+| '4' | Scroll Down | Text moves top → bottom. |
+| '5' | Typewriter | Characters appear one at a time. |
+| '6' | Blink | Text flashes on/off. |
+| '7' | Bounce | Text scrolls left, hits edge, reverses direction. |
+| '8' | Slide In | Text slides in from off‑screen and stops. |
+| '9' | Slide Out | Text slides out and disappears. |
 
 ---
 

@@ -60,7 +60,7 @@ def load_config():
         plex_ip = input("🌐 Enter your Plex server IP (default 127.0.0.1): ").strip()
         plex_port = input("🔌 Enter your Plex server port (default 32400): ").strip()
         plex_token = input("🔑 Enter your Plex token: ").strip()
-        led_sign_password = input("🔒 (optional) Enter LED sign password (leave blank if none): ").strip()
+#        led_sign_password = input("🔒 (optional) Enter LED sign password (leave blank if none): ").strip()          # Not yet supported by PyPixelcolor module
 
         if plex_port == "":
             plex_port = "32400"
@@ -289,3 +289,4 @@ while True:
         print(f"❌ Error: {e}")
 
     time.sleep(config["poll_interval"])
+

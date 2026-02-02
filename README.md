@@ -5,7 +5,7 @@ A Python script that connects your **Plex Media Server** to an **iPixel Color LE
 
 This project is designed for reliability and hands‑off operation. Once configured, it runs continuously and automatically reconnects to your LED sign if the bluetooth connection drops.
 
-![ezgif-681aa14bd58a9571](https://github.com/user-attachments/assets/32897c94-65ae-43bb-a333-215d14cc2b11)
+![Plex Now Playing Marquee LED Sign](https://github.com/user-attachments/assets/32897c94-65ae-43bb-a333-215d14cc2b11)
 * actually much smoother than this, but made this gif and its a little jumpy.
 
 

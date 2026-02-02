@@ -60,7 +60,7 @@ def load_config():
         plex_ip = input("🌐 Enter your Plex server IP (default 127.0.0.1): ").strip()
         plex_port = input("🔌 Enter your Plex server port (default 32400): ").strip()
         plex_token = input("🔑 Enter your Plex token: ").strip()
-#        led_sign_password = input("🔒 (optional) Enter LED sign password (leave blank if none): ").strip()          # Not yet supported by PyPixelcolor module
+        led_sign_password = input("🔒 (optional) Enter LED sign password (leave blank if none): ").strip()
 
         if plex_port == "":
             plex_port = "32400"
@@ -150,21 +150,17 @@ def connect_ble(address, password=None):
     backoff = 1
     while True:
         try:
+            # Password MUST be passed ONLY to constructor
             if password:
-                # Prefer passing password in constructor to avoid an unauthenticated attempt.
-                # If constructor doesn't accept password, fall back to connect(password=...).
-                try:
-                    client = Client(address=address, password=password)
-                    client.connect()
-                except TypeError:
-                    client = Client(address=address)
-                    client.connect(password=password)
+                client = Client(address=address, password=password)
             else:
                 client = Client(address=address)
-                client.connect()
+
+            client.connect()  # Never pass password here
 
             print("🔗 BLE connected")
             return client
+
         except Exception as e:
             print(f"⚠️ BLE connection failed: {e}")
             print(f"⏳ Retrying in {backoff} seconds...")
@@ -289,4 +285,3 @@ while True:
         print(f"❌ Error: {e}")
 
     time.sleep(config["poll_interval"])
-

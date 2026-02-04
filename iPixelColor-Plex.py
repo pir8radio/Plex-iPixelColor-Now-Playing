@@ -8,6 +8,7 @@ import json
 import os
 import subprocess
 import re
+import datetime
 
 # ---------------------------------------------------------
 # AUTO-INSTALL ANY MISSING MODULES
@@ -50,7 +51,7 @@ DEFAULT_CONFIG = {
     "animation_type": 1,
     "animation_speed": 80,
     "ble_address": None,
-    "led_sign_password": ""   # kept for future versions, unused at runtime
+    "led_sign_password": ""
 }
 
 def load_config():
@@ -192,6 +193,16 @@ print(f"💡 Brightness set to {config['brightness']}")
 plex = PlexServer(config["plex_url"], config["plex_token"])
 
 # ---------------------------------------------------------
+# TIME SYNC (ACK IGNORED)
+# ---------------------------------------------------------
+def sync_time_to_sign(client):
+    try:
+        client.set_time()
+    except Exception:
+        pass
+    print("⏰ Time sync sent")
+
+# ---------------------------------------------------------
 # PLEX DEVICE DETECTION
 # ---------------------------------------------------------
 def get_now_playing_for_device(target):
@@ -237,6 +248,8 @@ def get_now_playing_for_device(target):
 print(f"⌚ Watching Plex device: {config['target_device']}")
 
 last_title = None
+last_clock_sync = 0
+CLOCK_SYNC_INTERVAL = 600
 
 while True:
     try:
@@ -246,7 +259,12 @@ while True:
             print("🔁 BLE reconnected — refreshing display")
             client.set_brightness(config["brightness"])
             print(f"💡 Brightness restored to {config['brightness']}")
-            last_title = None
+            if config.get("use_clock", False) and last_title == "Idle":
+                sync_time_to_sign(client)
+                client.set_clock_mode(style=6, show_date=False, format_24=False)
+                last_clock_sync = time.time()
+            else:
+                last_title = None
 
         now_playing = get_now_playing_for_device(config["target_device"])
 
@@ -266,7 +284,9 @@ while True:
                 print("⏹️ Nothing playing")
 
                 if config.get("use_clock", False):
+                    sync_time_to_sign(client)
                     client.set_clock_mode(style=6, show_date=False, format_24=False)
+                    last_clock_sync = time.time()
                 else:
                     client.send_text(
                         config["idle_text"],
@@ -275,6 +295,12 @@ while True:
                     )
 
                 last_title = "Idle"
+
+            if config.get("use_clock", False) and last_title == "Idle":
+                now_ts = time.time()
+                if now_ts - last_clock_sync >= CLOCK_SYNC_INTERVAL:
+                    sync_time_to_sign(client)
+                    last_clock_sync = now_ts
 
     except Exception as e:
         print(f"❌ Error: {e}")

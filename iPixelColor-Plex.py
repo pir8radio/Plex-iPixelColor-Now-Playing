@@ -160,6 +160,11 @@ def connect_ble(address):
         except Exception as e:
             print(f"⚠️ BLE connection failed: {e}")
             print(f"⏳ Retrying in {backoff} seconds...")
+            subprocess.run(["sudo", "rfkill", "block", "bluetooth"], check=True)
+            print("Restarting Bluetooth")
+            time.sleep(5)
+            subprocess.run(["sudo", "rfkill", "unblock", "bluetooth"], check=True)
+            print("Bluetooth re-enabled")
             time.sleep(backoff)
             backoff = min(backoff * 2, 60)
 

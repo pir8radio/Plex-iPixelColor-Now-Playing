@@ -110,7 +110,7 @@ def run_cli_scan():
 
     try:
         result = subprocess.run(
-            ["pypixelcolor", "--scan"],
+            [sys.executable, "-m", "pypixelcolor", "--scan"],
             capture_output=True,
             text=True,
             check=True

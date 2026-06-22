@@ -17,14 +17,14 @@ def ensure_module(name):
     try:
         return __import__(name)
     except ImportError:
-        print(f'\n⚠️ Missing module "{name}". Installing...\n')
+        print(f'\n[WARN] Missing module "{name}". Installing...\n')
         from subprocess import check_call
         try:
             check_call([sys.executable, "-m", "pip", "install", "--user", name])
-            print(f'\n✅ Module "{name}" installed. Restarting...\n')
+            print(f'\n[OK] Module "{name}" installed. Restarting...\n')
             sys.exit(1)
         except Exception as e:
-            print(f'❌ Failed to install module "{name}": {e}')
+            print(f'[ERR] Failed to install module "{name}": {e}')
             sys.exit(1)
 
 plexapi = ensure_module("plexapi")
@@ -56,12 +56,12 @@ DEFAULT_CONFIG = {
 
 def load_config():
     if not os.path.exists(CONFIG_FILE):
-        print("\n🆕 First-time setup — let's configure your Plex connection.\n")
+        print("\n[SETUP] First-time setup — configure your Plex connection.\n")
 
-        plex_ip = input("🌐 Enter your Plex server IP (default 127.0.0.1): ").strip()
-        plex_port = input("🔌 Enter your Plex server port (default 32400): ").strip()
-        plex_token = input("🔑 Enter your Plex token: ").strip()
-        led_sign_password = input("🔒 (optional) Enter LED sign password (leave blank if none): ").strip()
+        plex_ip = input("[NET] Enter your Plex server IP (default 127.0.0.1): ").strip()
+        plex_port = input("[PORT] Enter your Plex server port (default 32400): ").strip()
+        plex_token = input("[TOKEN] Enter your Plex token: ").strip()
+        led_sign_password = input("[LOCK] Enter LED sign password (optional): ").strip()
 
         if plex_port == "":
             plex_port = "32400"
@@ -75,7 +75,7 @@ def load_config():
 
         save_config(new_cfg)
 
-        print("\n✅ Configuration saved. More user options are in the config file created, check them out.\n")
+        print("\n[OK] Configuration saved. More user options are in the config file.\n")
         return new_cfg
 
     try:
@@ -106,7 +106,7 @@ config = load_config()
 # BLE SCANNING
 # ---------------------------------------------------------
 def run_cli_scan():
-    print("\n🔍 Scanning for iPixel Color LED Signs...\n")
+    print("\n[SCAN] Scanning for iPixel Color LED Signs...\n")
 
     try:
         result = subprocess.run(
@@ -116,7 +116,7 @@ def run_cli_scan():
             check=True
         )
     except Exception as e:
-        print(f"❌ Scanner failed: {e}")
+        print(f"[ERR] Scanner failed: {e}")
         sys.exit(1)
 
     output = result.stdout + result.stderr
@@ -125,24 +125,24 @@ def run_cli_scan():
     devices = re.findall(r"-\s+(.+?)\s+\(([0-9A-F:]{17})\)", output)
 
     if not devices:
-        print("❌ No LED signs found.")
+        print("[ERR] No LED signs found.")
         sys.exit(1)
 
-    print("📡 Devices detected:\n")
+    print("[DEV] Devices detected:\n")
     for i, (name, addr) in enumerate(devices):
         print(f"  [{i}] {name} — {addr}")
 
-    print("\n👉 Select a device number:")
+    print("\nSelect a device number:")
     while True:
         choice = input("> ").strip()
         if choice.isdigit() and int(choice) in range(len(devices)):
             name, addr = devices[int(choice)]
-            print(f"\n✅ Selected: {name} ({addr})\n")
+            print(f"\n[OK] Selected: {name} ({addr})\n")
             config["ble_address"] = addr
             save_config(config)
             return addr
 
-        print("❌ Invalid choice. Try again.")
+        print("[ERR] Invalid choice. Try again.")
 
 # ---------------------------------------------------------
 # BLE CONNECT + AUTO-RECONNECT
@@ -154,17 +154,17 @@ def connect_ble(address):
             client = Client(address=address)
             client.connect()
 
-            print("🔗 BLE connected")
+            print("[BT] BLE connected")
             return client
 
         except Exception as e:
-            print(f"⚠️ BLE connection failed: {e}")
-            print(f"⏳ Retrying in {backoff} seconds...")
+            print(f"[WARN] BLE connection failed: {e}")
+            print(f"[WAIT] Retrying in {backoff} seconds...")
             subprocess.run(["sudo", "rfkill", "block", "bluetooth"], check=True)
-            print("Restarting Bluetooth")
+            print("[BT] Restarting Bluetooth")
             time.sleep(5)
             subprocess.run(["sudo", "rfkill", "unblock", "bluetooth"], check=True)
-            print("Bluetooth re-enabled")
+            print("[BT] Bluetooth re-enabled")
             time.sleep(backoff)
             backoff = min(backoff * 2, 60)
 
@@ -173,7 +173,7 @@ def ensure_ble_connected(client, address):
         client.get_device_info()
         return client, False
     except Exception:
-        print("🔄 BLE connection lost — reconnecting...")
+        print("[RECON] BLE connection lost — reconnecting...")
         new_client = connect_ble(address)
         return new_client, True
 
@@ -185,7 +185,7 @@ BLE_ADDRESS = config["ble_address"]
 if not BLE_ADDRESS:
     BLE_ADDRESS = run_cli_scan()
 
-print(f"🛜 Using bluetooth device: {BLE_ADDRESS}")
+print(f"[BLE] Using bluetooth device: {BLE_ADDRESS}")
 
 # ---------------------------------------------------------
 # INITIALIZE CLIENT + PLEX
@@ -193,19 +193,19 @@ print(f"🛜 Using bluetooth device: {BLE_ADDRESS}")
 client = connect_ble(BLE_ADDRESS)
 
 client.set_brightness(config["brightness"])
-print(f"💡 Brightness set to {config['brightness']}")
+print(f"[BRI] Brightness set to {config['brightness']}")
 
 plex = PlexServer(config["plex_url"], config["plex_token"])
 
 # ---------------------------------------------------------
-# TIME SYNC (ACK IGNORED)
+# TIME SYNC
 # ---------------------------------------------------------
 def sync_time_to_sign(client):
     try:
         client.set_time()
     except Exception:
         pass
-    print("⏰ Time sync sent")
+    print("[TIME] Time sync sent")
 
 # ---------------------------------------------------------
 # PLEX DEVICE DETECTION
@@ -218,7 +218,7 @@ def get_now_playing_for_device(target):
         for s in sessions:
             p = s.players[0] if s.players else None
             if p:
-                print(f"  ▶️ {p.title} — {p.product} on {p.platform}")
+                print(f"  [PLAY] {p.title} — {p.product} on {p.platform}")
         print("")
 
     for session in sessions:
@@ -250,7 +250,7 @@ def get_now_playing_for_device(target):
 # ---------------------------------------------------------
 # MAIN LOOP
 # ---------------------------------------------------------
-print(f"⌚ Watching Plex device: {config['target_device']}")
+print(f"[INFO] Watching Plex device: {config['target_device']}")
 
 last_title = None
 last_clock_sync = 0
@@ -261,9 +261,9 @@ while True:
         client, reconnected = ensure_ble_connected(client, BLE_ADDRESS)
 
         if reconnected:
-            print("🔁 BLE reconnected — refreshing display")
+            print("[RECON] BLE reconnected — refreshing display")
             client.set_brightness(config["brightness"])
-            print(f"💡 Brightness restored to {config['brightness']}")
+            print(f"[BRI] Brightness restored to {config['brightness']}")
             if config.get("use_clock", False) and last_title == "Idle":
                 sync_time_to_sign(client)
                 client.set_clock_mode(style=6, show_date=False, format_24=False)
@@ -275,7 +275,7 @@ while True:
 
         if now_playing:
             if now_playing != last_title:
-                print(f"▶️ Now Playing: {now_playing}")
+                print(f"[PLAY] Now Playing: {now_playing}")
                 client.send_text(
                     now_playing,
                     animation=config["animation_type"],
@@ -286,7 +286,7 @@ while True:
 
         else:
             if last_title != "Idle":
-                print("⏹️ Nothing playing")
+                print("[STOP] Nothing playing")
 
                 if config.get("use_clock", False):
                     sync_time_to_sign(client)
@@ -308,6 +308,6 @@ while True:
                     last_clock_sync = now_ts
 
     except Exception as e:
-        print(f"❌ Error: {e}")
+        print(f"[ERR] Error: {e}")
 
     time.sleep(config["poll_interval"])

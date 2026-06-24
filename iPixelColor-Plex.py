@@ -9,6 +9,7 @@ import os
 import subprocess
 import re
 import datetime
+import platform
 
 # ---------------------------------------------------------
 # AUTO-INSTALL ANY MISSING MODULES
@@ -32,6 +33,12 @@ pypixelcolor = ensure_module("pypixelcolor")
 
 from plexapi.server import PlexServer
 from pypixelcolor.client import Client
+
+# ---------------------------------------------------------
+# OS FLAGS
+# ---------------------------------------------------------
+IS_LINUX = platform.system().lower() == "linux"
+IS_WINDOWS = platform.system().lower() == "windows"
 
 # ---------------------------------------------------------
 # CONFIGURATION FILE
@@ -145,7 +152,7 @@ def run_cli_scan():
         print("[ERR] Invalid choice. Try again.")
 
 # ---------------------------------------------------------
-# BLE CONNECT + AUTO-RECONNECT
+# CROSS-PLATFORM BLE CONNECT + AUTO-RECONNECT
 # ---------------------------------------------------------
 def connect_ble(address):
     backoff = 1
@@ -153,18 +160,26 @@ def connect_ble(address):
         try:
             client = Client(address=address)
             client.connect()
-
             print("[BT] BLE connected")
             return client
 
         except Exception as e:
             print(f"[WARN] BLE connection failed: {e}")
+
+            if IS_LINUX:
+                print("[BT] Linux detected — attempting Bluetooth reset")
+                try:
+                    subprocess.run(["sudo", "rfkill", "block", "bluetooth"], check=False)
+                    time.sleep(2)
+                    subprocess.run(["sudo", "rfkill", "unblock", "bluetooth"], check=False)
+                    print("[BT] Bluetooth re-enabled")
+                except Exception as e2:
+                    print(f"[WARN] Linux Bluetooth reset failed: {e2}")
+
+            if IS_WINDOWS:
+                print("[BT] Windows detected — waiting for device to reappear")
+
             print(f"[WAIT] Retrying in {backoff} seconds...")
-            subprocess.run(["sudo", "rfkill", "block", "bluetooth"], check=True)
-            print("[BT] Restarting Bluetooth")
-            time.sleep(5)
-            subprocess.run(["sudo", "rfkill", "unblock", "bluetooth"], check=True)
-            print("[BT] Bluetooth re-enabled")
             time.sleep(backoff)
             backoff = min(backoff * 2, 60)
 
